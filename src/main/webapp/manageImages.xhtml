@@ -1,0 +1,42 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="layout/template.xhtml">
+
+
+    <ui:define name="body">
+
+
+        <h:form id="imgForm">
+            <p:commandButton styleClass="formbutton" value="Refresh available images"
+                             onclick="window.location.reload()"/>
+            <p:dataTable var="image" rows="4" dynamic="true" paginator="true" id="imgTable"
+                         value="#{imageController.contactImages}"
+                         rendered="#{not empty imageController.contactImages}">
+                <p:column>
+                    <p:commandLink immediate="true">
+                        <f:setPropertyActionListener value="#{image.id}" target="#{contactController.imageId}"/>
+                        <h:graphicImage value="/ServeImageGroovlet.groovy?id=#{image.id}" style="border:0"/>
+                    </p:commandLink>
+                </p:column>
+                <p:column>
+                    <p:commandButton styleClass="formbutton" value="Click to delete"
+                                     action="#{imageController.deleteImage(image)}"
+                                     onclick="return confirm('Really delete?');"
+                                     update="imgForm"/>
+                </p:column>
+            </p:dataTable>
+        </h:form>
+        <h:outputLink target="_blank" value="/uploadImage.xhtml">Upload new image</h:outputLink>
+
+
+    </ui:define>
+
+
+</ui:composition>

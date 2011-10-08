@@ -1,0 +1,22 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:p="http://primefaces.prime.com.tr/ui">
+
+
+    <p:dataTable var="image" rows="1" dynamic="true" paginator="true" id="imgTable"
+                 value="#{imageController.contactImages}"
+                 rendered="#{not empty imageController.contactImages}">
+        <p:column>
+            <h:panelGrid>
+                <h:link immediate="true" outcome="#" onclick="confirmOK(#{image.id},'contactForm:hiddenImageId')">
+                    <h:graphicImage value="/ServeImageGroovlet.groovy?id=#{image.id}" style="border:0"/>
+                </h:link>
+                <h:outputLabel value="Click to choose image" style="font-size:small;"/>
+            </h:panelGrid>
+        </p:column>
+
+    </p:dataTable>
+
+</div>

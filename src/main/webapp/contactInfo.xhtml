@@ -1,0 +1,137 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                xmlns:m="http://code.google.com/p/gmaps4jsf/"
+                template="layout/template.xhtml">
+
+
+    <f:metadata>
+        <f:viewParam name="contactId" value="#{contactController.contactId}"/>
+        <f:viewParam name="addressId" value="#{contactController.addressId}"/>
+    </f:metadata>
+
+
+    <ui:define name="body">
+        <f:event type="preRenderComponent" listener="#{contactController.loadContact}"/>
+        <p:tabView id="tab">
+            <p:tab title="ContactInfo" id="contactInfo">
+                <h:form id="contactInfoForm" prependId="false">
+                    <h:panelGrid columns="1">
+
+                        <h:outputText value="#{contactController.selectedContact.name}"/>
+                        <h:outputLink
+                                value="mailto:#{contactController.selectedContact.email}">#{contactController.selectedContact.email}</h:outputLink>
+                        <h:graphicImage
+                                url="/ServeImageGroovlet.groovy?id=#{contactController.selectedContact.contactImage.id}"/>
+                        <p:dataTable var="_address" id="addressTable"
+                                     value="#{contactController.selectedContact.addresses}" paginator="true"
+                                     rows="5">
+                            <p:column resizable="true">
+                                <f:facet name="header">
+                                    Street
+                                </f:facet>
+                                <p:inplace rendered="#{not empty _address.street}">
+                                    <p:inputText value="#{_address.street}"/>
+                                </p:inplace>
+                                <p:inputText value="#{_address.street}" rendered="#{empty _address.street}"/>
+                            </p:column>
+                            <p:column resizable="true">
+                                <f:facet name="header">
+                                    City
+                                </f:facet>
+                                <p:inplace rendered="#{not empty _address.city}">
+                                    <p:inputText value="#{_address.city}"/>
+                                </p:inplace>
+                                <h:inputText value="#{_address.city}" rendered="#{empty _address.city}"/>
+                            </p:column>
+                            <p:column resizable="true">
+                                <f:facet name="header">
+                                    Country
+                                </f:facet>
+                                <p:inplace rendered="#{not empty _address.country}">
+                                    <p:inputText value="#{_address.country}"/>
+                                </p:inplace>
+                                <h:inputText value="#{_address.country}" rendered="#{empty _address.country}"/>
+                            </p:column>
+                            <p:column resizable="true">
+
+                                <p:commandLink update="mapPanel" ajax="false" value="Show in map"
+                                               action="#{contactController.updateCoordinates}">
+                                    <f:setPropertyActionListener value="#{_address}"
+                                                                 target="#{contactController.selectedAddress}"/>
+                                </p:commandLink>
+                            </p:column>
+                            <p:column>
+                                <p:commandButton value="Save"
+                                                 action="#{contactController.updateAddressForContact}"
+                                                 update="contactInfo,growl">
+                                    <f:setPropertyActionListener value="#{_address}"
+                                                                 target="#{contactController.selectedAddress}"/>
+                                </p:commandButton>
+                            </p:column>
+                            <p:column>
+                                <p:commandButton value="Delete" immediate="true"
+                                                 action="#{contactController.deleteAddressForContact}"
+                                                 onclick="return confirm('Really delete?');">
+                                    <f:setPropertyActionListener value="#{_address}"
+                                                                 target="#{contactController.selectedAddress}"/>
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+
+                        <p:outputPanel id="mapPanel">
+                            <p:gmap id="map" rendered="#{not empty contactController.selectedAddress}"
+                                    center="#{contactController.coordinates.lat},#{contactController.coordinates.lng}"
+                                    zoom="13"
+                                    type="HYBRID"
+                                    style="width:350px;height:250px"/>
+                        </p:outputPanel>
+
+                    </h:panelGrid>
+                </h:form>
+
+            </p:tab>
+            <p:tab title="Add address">
+                <h:form>
+                    <h:panelGrid columns="2">
+                        <f:validateBean>
+                            <h:outputLabel for="street">Street</h:outputLabel>
+                            <p:inputText id="street"
+                                         value="#{contactController.street}" required="true"/>
+                            <h:outputLabel for="city">City</h:outputLabel>
+                            <p:inputText id="city"
+                                         value="#{contactController.city}" required="true"/>
+                            <h:outputLabel for="country">Country</h:outputLabel>
+                            <p:inputText id="country"
+                                         value="#{contactController.country}" required="true"/>
+                        </f:validateBean>
+                    </h:panelGrid>
+                    <br/>
+                    <p:commandButton styleClass="formbutton" value="Add address" update="growl"
+                                     action="#{contactController.addAddressToContact}"/>
+                </h:form>
+            </p:tab>
+
+            <p:tab title="Change Image">
+                <h:form id="contactForm">
+                    <h:inputHidden id="hiddenImageId"
+                                   value="#{contactController.imageId}"/>
+                    <ui:include src="imageTable.xhtml"/>
+                    <p:commandButton value="Update" rendered="#{not empty imageController.contactImages}"
+                                     action="#{contactController.updateContact}"/>
+                </h:form>
+                <h:link outcome="/manageImages.jsf" value="You need to upload some images"
+                        rendered="#{empty imageController.contactImages}"/>
+            </p:tab>
+        </p:tabView>
+
+    </ui:define>
+
+
+</ui:composition>

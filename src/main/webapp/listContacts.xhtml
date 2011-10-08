@@ -1,0 +1,87 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="layout/template.xhtml">
+
+
+    <ui:define name="body">
+        <h:form id="findContacts" prependId="false">
+            <p:panel header="Find contact">
+                <h:panelGrid columns="3" cellpadding="5">
+                    <h:outputLabel value="Email" for="findContact"/>
+                    <p:autoComplete id="findContact" value="#{contactController.searchText}" required="true"/>
+                    <p:commandButton styleClass="formbutton" value="Find" action="#{contactController.findContact}"/>
+                </h:panelGrid>
+            </p:panel>
+
+        </h:form>
+
+        <br/>
+
+        <h:form id="listContactsForm" prependId="false">
+
+            <p:panel id="contactPanel" header="List contacts" style="margin-bottom:10px;">
+                <p:dataTable var="_contact" id="contactTable" lazy="true" dynamic="true"
+                             value="#{contactTableManager.contactModel}"
+                             paginator="true" rows="8">
+
+                    <p:column resizable="true">
+                        <h:graphicImage value="/ServeImageGroovlet.groovy?id=#{_contact.contactImage.id}&amp;crop=d"/>
+                    </p:column>
+                    <p:column resizable="true">
+                        <f:facet name="header">
+                            Name
+                        </f:facet>
+                        <p:inplace rendered="#{not empty _contact.name}">
+                            <h:inputText value="#{_contact.name}" id="contact_name"/>
+                        </p:inplace>
+                        <h:inputText value="#{_contact.name}" rendered="#{empty _contact.name}"/>
+                    </p:column>
+
+                    <p:column resizable="true">
+                        <f:facet name="header">
+                            Email
+                        </f:facet>
+                        <p:inplace rendered="#{not empty _contact.email}">
+                            <h:inputText id="inplace_email" value="#{_contact.email}"/>
+                        </p:inplace>
+                        <h:inputText value="#{_contact.email}" rendered="#{empty _contact.email}"/>
+                    </p:column>
+
+                    <p:column>
+                        <h:link outcome="/contactInfo.xhtml" value="View Contact">
+                            <f:param name="contactId" value="#{_contact.id}"/>
+                        </h:link>
+                    </p:column>
+
+                    <p:column>
+                        <p:commandButton value="Save"
+                                         update="listContactsForm"
+                                         action="#{contactTableManager.updateContact}">
+                            <f:setPropertyActionListener value="#{_contact}"
+                                                         target="#{contactTableManager.selectedContact}"/>
+                        </p:commandButton>
+                    </p:column>
+
+                    <p:column>
+                        <p:commandButton id="removeButton" value="Delete" immediate="true" update="listContactsForm"
+                                         action="#{contactTableManager.deleteContact}">
+                            <f:setPropertyActionListener value="#{_contact}"
+                                                         target="#{contactTableManager.selectedContact}"/>
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+
+            </p:panel>
+
+        </h:form>
+    </ui:define>
+
+
+</ui:composition>

@@ -1,0 +1,50 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                template="layout/template.xhtml">
+
+
+    <ui:define name="body">
+
+        <h:form id="contactForm">
+            <p:panel id="panel" header="New contact" style="margin-bottom:10px;">
+                <h:panelGrid columns="2">
+                    <f:validateBean>
+                        <h:outputLabel for="name">Name</h:outputLabel>
+                        <p:inputText id="name"
+                                     value="#{contactController.name}" required="true"/>
+                        <h:outputLabel for="email">Email</h:outputLabel>
+                        <p:inputText id="email"
+                                     value="#{contactController.email}" required="true"/>
+                        <h:outputLabel for="street">Street</h:outputLabel>
+                        <p:inputText id="street"
+                                     value="#{contactController.street}" required="true"/>
+                        <h:outputLabel for="city">City</h:outputLabel>
+                        <p:inputText id="city"
+                                     value="#{contactController.city}" required="true"/>
+                        <h:outputLabel for="country">Country</h:outputLabel>
+                        <p:inputText id="country"
+                                     value="#{contactController.country}" required="true"/>
+
+                    </f:validateBean>
+                    <h:inputHidden id="hiddenImageId"
+                                   value="#{contactController.imageId}"/>
+                </h:panelGrid>
+                <h:panelGrid>
+                    <ui:include src="imageTable.xhtml"/>
+                </h:panelGrid>
+                <br/>
+                <p:commandButton id="createContact" value="Create contact" action="#{contactController.createContact}"
+                                 update="growl"/>
+            </p:panel>
+        </h:form>
+    </ui:define>
+
+
+</ui:composition>
