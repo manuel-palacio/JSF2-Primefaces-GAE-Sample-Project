@@ -42,6 +42,8 @@
         <param-value>Production</param-value>
     </context-param>
 
+
+
     <context-param>
         <param-name>com.sun.faces.allowTextChildren</param-name>
         <param-value>true</param-value>
