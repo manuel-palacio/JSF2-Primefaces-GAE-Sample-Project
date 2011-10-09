@@ -60,15 +60,12 @@
                             </p:column>
                             <p:column resizable="true">
 
-                                <!--<p:commandLink update="mapPanel" ajax="false" value="Show in map"
+                                <p:commandLink update="mapPanel" ajax="false" value="Show in map"
                                                action="#{contactController.updateCoordinates}">
                                     <f:setPropertyActionListener value="#{_address}"
                                                                  target="#{contactController.selectedAddress}"/>
-                                </p:commandLink>-->
-                                <h:link outcome="/contactInfo.xhtml" value="Show in map">
-                                    <f:param name="contactId" value="#{contactController.selectedContact.id}"/>
-                                    <f:param name="addressId" value="#{_address.id}"/>
-                                </h:link>
+                                </p:commandLink>
+
                             </p:column>
                             <p:column>
                                 <p:commandButton value="Save"
