@@ -116,6 +116,7 @@ class ContactController implements Serializable {
         def result = url.toURL().text.split(',')
         double lat = Double.parseDouble(result[-2])
         double lng = Double.parseDouble(result[-1])
+        coordinates = new LatLng(lat, lng)
 
     }
 
