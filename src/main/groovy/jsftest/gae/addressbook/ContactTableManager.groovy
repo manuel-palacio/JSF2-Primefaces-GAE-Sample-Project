@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Controller
 
 @Controller
-@Scope("session")
+@Scope("view")
 class ContactTableManager implements Serializable {
 
     private static final long serialVersionUID = 1999L
@@ -24,6 +24,9 @@ class ContactTableManager implements Serializable {
 
     Contact selectedContact
 
+    String searchText
+
+
 
     @Inject
     public ContactTableManager(final ContactService contactService, FacesUtils facesUtils, final Identity identity) {
@@ -34,7 +37,7 @@ class ContactTableManager implements Serializable {
 
             @Override
             public List<Contact> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, String> filters) {
-                return contactService.getAllContacts(first, pageSize, identity.currentUser());
+                return contactService.getAllContacts(first, pageSize, identity.currentUser())
             }
         };
 
@@ -45,16 +48,33 @@ class ContactTableManager implements Serializable {
         this.identity = identity
     }
 
-    public void deleteContact() {
+    void deleteContact() {
         contactService.delete(selectedContact);
         contactModel.setWrappedData(contactService.getAllContacts(contactModel.getRowIndex(),
                 contactModel.getRowCount(), identity.currentUser()))
     }
 
 
-    public void updateContact() {
+    void updateContact() {
         contactService.updateContact(selectedContact, null)
         facesUtils.addSuccessMessage("contact updated")
+    }
+
+    void findContact() {
+        List<Contact> foundContacts = contactService.findContactByName(searchText.trim(), identity.currentUser())
+        if (!foundContacts.isEmpty()) {
+            contactModel = new LazyDataModel<Contact>() {
+
+                @Override
+                public List<Contact> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, String> filters) {
+                    return foundContacts;
+                }
+            }
+
+            contactModel.setRowCount(foundContacts.size())
+        } else {
+            facesUtils.addErrorMessage("Could not find " + searchText)
+        }
     }
 
 }

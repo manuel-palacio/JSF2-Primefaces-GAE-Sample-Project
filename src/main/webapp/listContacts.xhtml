@@ -14,9 +14,10 @@
         <h:form id="findContacts" prependId="false">
             <p:panel header="Find contact">
                 <h:panelGrid columns="3" cellpadding="5">
-                    <h:outputLabel value="Email" for="findContact"/>
-                    <p:autoComplete id="findContact" value="#{contactController.searchText}" required="true"/>
-                    <p:commandButton styleClass="formbutton" value="Find" action="#{contactController.findContact}"/>
+                    <h:outputLabel value="Name" for="findContact"/>
+                    <p:inputText id="findContact" value="#{contactTableManager.searchText}" required="true"/>
+                    <p:commandButton value="Find" action="#{contactTableManager.findContact}"
+                                     update="contactPanel,growl"/>
                 </h:panelGrid>
             </p:panel>
 
@@ -26,10 +27,24 @@
 
         <h:form id="listContactsForm" prependId="false">
 
+            <p:contextMenu for="contactTable">
+                <p:menuitem value="Save"
+                            update="contactTable"
+                            action="#{contactTableManager.updateContact}">
+
+                </p:menuitem>
+                <p:menuitem id="removeButton" value="Delete" update="contactTable"
+                            action="#{contactTableManager.deleteContact}">
+
+                </p:menuitem>
+            </p:contextMenu>
+
             <p:panel id="contactPanel" header="List contacts" style="margin-bottom:10px;">
                 <p:dataTable var="_contact" id="contactTable" lazy="true" dynamic="true"
+                             rowKey="#{_contact.id}"
                              value="#{contactTableManager.contactModel}"
-                             paginator="true" rows="8">
+                             selection="#{contactTableManager.selectedContact}" selectionMode="single"
+                             paginator="true" rows="10">
 
                     <p:column resizable="true">
                         <h:graphicImage value="/ServeImageGroovlet.groovy?id=#{_contact.contactImage.id}&amp;crop=d"/>
@@ -60,22 +75,6 @@
                         </h:link>
                     </p:column>
 
-                    <p:column>
-                        <p:commandButton value="Save"
-                                         update="listContactsForm"
-                                         action="#{contactTableManager.updateContact}">
-                            <f:setPropertyActionListener value="#{_contact}"
-                                                         target="#{contactTableManager.selectedContact}"/>
-                        </p:commandButton>
-                    </p:column>
-
-                    <p:column>
-                        <p:commandButton id="removeButton" value="Delete" immediate="true" update="listContactsForm"
-                                         action="#{contactTableManager.deleteContact}">
-                            <f:setPropertyActionListener value="#{_contact}"
-                                                         target="#{contactTableManager.selectedContact}"/>
-                        </p:commandButton>
-                    </p:column>
                 </p:dataTable>
 
             </p:panel>

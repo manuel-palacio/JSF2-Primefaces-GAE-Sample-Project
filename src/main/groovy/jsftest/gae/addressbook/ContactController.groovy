@@ -43,8 +43,6 @@ class ContactController implements Serializable {
 
     Address selectedAddress
 
-    String searchText
-
     Long imageId
 
     Long addressId
@@ -59,7 +57,7 @@ class ContactController implements Serializable {
     private static final Logger log = Logger.getLogger(ContactController.class.getName())
 
 
-    public void createContact() {
+    def createContact() {
         Contact contact = new Contact()
         contact.setEmail(email)
         contact.setName(name)
@@ -79,7 +77,7 @@ class ContactController implements Serializable {
         log.info("Contact created " + contact.getEmail())
     }
 
-    public void addAddressToContact() {
+    def addAddressToContact() {
         Address address = new Address()
         address.setId(new Date().getTime())
         address.setStreet(street)
@@ -91,7 +89,7 @@ class ContactController implements Serializable {
         facesUtils.addSuccessMessage("Added address to " + address)
     }
 
-    public void loadContact() {
+    def loadContact() {
         if (contactId != null) {
             selectedContact = contactService.findContactById(contactId, identity.currentUser())
             if (selectedContact != null) {
@@ -105,7 +103,7 @@ class ContactController implements Serializable {
         }
     }
 
-    void updateCoordinates() {
+    def updateCoordinates() {
         def params = [sensor: false,
                 output: 'csv',
                 q: [selectedAddress.street, selectedAddress.city, selectedAddress.country].collect { URLEncoder.encode(it, 'UTF-8') }.join(',+'),
@@ -120,7 +118,7 @@ class ContactController implements Serializable {
 
     }
 
-    public void updateContact() {
+    def updateContact() {
         contactService.updateContact(selectedContact, imageId);
         facesUtils.addSuccessMessage("Contact updated");
     }
@@ -133,24 +131,12 @@ class ContactController implements Serializable {
     }
 
 
-    public void deleteAddressForContact() {
+    def deleteAddressForContact() {
         selectedContact = contactService.deleteAddressForContact(selectedAddress, selectedContact.id, identity.currentUser())
     }
 
-    public void updateAddressForContact() {
+    def updateAddressForContact() {
         contactService.updateAddressForContactWithId(selectedAddress, selectedContact.id, identity.currentUser())
         facesUtils.addSuccessMessage("Address updated")
-    }
-
-
-    public String findContact() {
-        Contact foundContact = contactService.findContactByEmail(searchText.trim(), identity.currentUser())
-        if (foundContact != null) {
-            selectedContact = foundContact
-            return "/contactInfo.xhtml?faces-redirect=true&contactId=" + selectedContact.getId();
-        } else {
-            facesUtils.addErrorMessage("Could not find " + searchText)
-            return null
-        }
     }
 }

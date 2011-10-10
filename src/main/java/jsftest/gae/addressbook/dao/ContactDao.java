@@ -77,9 +77,9 @@ public class ContactDao extends DAOBase implements Serializable {
         return fact().begin().put(object);
     }
 
-    public Contact findContactByEmail(String email, User user) {
+    public List<Contact> findContactByName(String email, User user) {
         Query<Contact> query = fact().begin().query(Contact.class).filter("ownerId",
-                user.getUserId()).filter("email", email);
-        return query.get();
+                user.getUserId()).filter("name >=", email).filter("name <", email + "\uFFFD");
+        return query.list();
     }
 }

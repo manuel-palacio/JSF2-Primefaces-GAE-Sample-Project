@@ -21,6 +21,7 @@
         <p:tabView id="tab">
             <p:tab title="ContactInfo" id="contactInfo">
                 <h:form id="contactInfoForm" prependId="false">
+
                     <h:panelGrid columns="1">
 
                         <h:outputText value="#{contactController.selectedContact.name}"/>
@@ -28,7 +29,22 @@
                                 value="mailto:#{contactController.selectedContact.email}">#{contactController.selectedContact.email}</h:outputLink>
                         <h:graphicImage
                                 url="/ServeImageGroovlet.groovy?id=#{contactController.selectedContact.contactImage.id}"/>
+
+                        <p:contextMenu for="addressTable">
+                            <p:menuitem value="Save"
+                                        update="addressTable"
+                                        action="#{contactController.updateAddressForContact}">
+
+                            </p:menuitem>
+                            <p:menuitem id="removeButton" value="Delete" update="addressTable"
+                                        action="#{contactController.deleteAddressForContact}"
+                                        onclick="return confirm('Really delete?');">
+
+                            </p:menuitem>
+                        </p:contextMenu>
                         <p:dataTable var="_address" id="addressTable"
+                                     selection="#{contactController.selectedAddress}" selectionMode="single"
+                                     rowKey="#{_address.id}"
                                      value="#{contactController.selectedContact.addresses}" paginator="true"
                                      rows="5">
                             <p:column resizable="true">
@@ -67,22 +83,7 @@
                                 </p:commandLink>
 
                             </p:column>
-                            <p:column>
-                                <p:commandButton value="Save"
-                                                 action="#{contactController.updateAddressForContact}"
-                                                 update="contactInfo,growl">
-                                    <f:setPropertyActionListener value="#{_address}"
-                                                                 target="#{contactController.selectedAddress}"/>
-                                </p:commandButton>
-                            </p:column>
-                            <p:column>
-                                <p:commandButton value="Delete" immediate="true"
-                                                 action="#{contactController.deleteAddressForContact}"
-                                                 onclick="return confirm('Really delete?');">
-                                    <f:setPropertyActionListener value="#{_address}"
-                                                                 target="#{contactController.selectedAddress}"/>
-                                </p:commandButton>
-                            </p:column>
+
                         </p:dataTable>
 
                         <p:outputPanel id="mapPanel">

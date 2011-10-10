@@ -53,8 +53,8 @@ public class ContactService implements Serializable {
         return contactDao.findContactById(id, user);
     }
 
-    public Contact findContactByEmail(String email, User user) {
-        return contactDao.findContactByEmail(email, user);
+    public List<Contact> findContactByName(String email, User user) {
+        return contactDao.findContactByName(email, user);
     }
 
     public List<String> findContactsEmailAddresses(String name, User user) {
