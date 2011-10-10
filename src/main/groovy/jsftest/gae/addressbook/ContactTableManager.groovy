@@ -49,9 +49,8 @@ class ContactTableManager implements Serializable {
     }
 
     void deleteContact() {
-        contactService.delete(selectedContact);
-        contactModel.setWrappedData(contactService.getAllContacts(contactModel.getRowIndex(),
-                contactModel.getRowCount(), identity.currentUser()))
+        contactService.delete(selectedContact)
+        contactModel.setRowCount(contactModel.getRowCount() - 1);
     }
 
 

@@ -1,3 +1,5 @@
 Sample project showing Primefaces 3, Objectify, Spring 3 and JSF 2 in action on GAE
 
+Features a small CRUD app with Groovy controllers
+
 Can bee seen in action here: http://jsf2addressbook.appspot.com/ (need to login with google account)

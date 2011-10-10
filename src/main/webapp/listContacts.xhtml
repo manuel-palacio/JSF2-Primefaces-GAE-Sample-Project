@@ -27,19 +27,19 @@
 
         <h:form id="listContactsForm" prependId="false">
 
-            <p:contextMenu for="contactTable">
-                <p:menuitem value="Save"
-                            update="contactTable"
-                            action="#{contactTableManager.updateContact}">
-
-                </p:menuitem>
-                <p:menuitem id="removeButton" value="Delete" update="contactTable"
-                            action="#{contactTableManager.deleteContact}">
-
-                </p:menuitem>
-            </p:contextMenu>
 
             <p:panel id="contactPanel" header="List contacts" style="margin-bottom:10px;">
+                <p:contextMenu for="contactTable" rendered="#{contactTableManager.contactModel.rowCount > 0}">
+                    <p:menuitem value="Save"
+                                update="contactTable"
+                                action="#{contactTableManager.updateContact}">
+
+                    </p:menuitem>
+                    <p:menuitem id="removeButton" value="Delete" update="listContactsForm"
+                                action="#{contactTableManager.deleteContact}">
+
+                    </p:menuitem>
+                </p:contextMenu>
                 <p:dataTable var="_contact" id="contactTable" lazy="true" dynamic="true"
                              rowKey="#{_contact.id}"
                              value="#{contactTableManager.contactModel}"
